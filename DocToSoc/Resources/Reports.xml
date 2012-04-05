@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Reports>
+  <!-- if multiple macros are to run then separate the macros with pipe delimiter ie: ="File.xlsb!Function1|File.xlsb!Function2|File.xlsb!Function3" -->
+  <!-- Two values are currently available for socrataAction attribute are "replace" or "append"-->
+  <Report Short="Upcoming Hearings" Name="C:\KRAY_GIS\working\Upcoming_Hearings_March_raw.xls" Macro="PERSONAL.XLSB!CleanDocket|PERSONAL.XLSB!Create_Upcoming_Docket" PostToSocrata="yes" SocrataAction="replace" SocrataId="8z9s-izib"/>
+  <Report Short="shortname2" Name="c:\report2.xls" Macro="macro2"/>
+  <Report Short="Docket2" Name="C:\Users\Amirbey\Documents\NOLA Socrata Testing\Docket_test2.xls" Macro="CleanDocket" PostToSocrata="yes" SocrataAction="replace" SocrataId="8efv-x7zr" SocrataHeaderRows="1"/>
+</Reports>

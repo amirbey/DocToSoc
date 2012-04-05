@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Reports>
+  <!-- if multiple macros are to run then separate the macros with pipe delimiter ie: ="File.xlsb!Function1|File.xlsb!Function2|File.xlsb!Function3" -->
+  <!-- Two values are currently available for socrataAction attribute are "replace" or "append"-->
+  <Report Short="Report1" Name="c:\path\report1.xls" Macro="Report1.XLSB!MacroName1|Report1.XLSB!MacroName2" PostToSocrata="yes" SocrataAction="replace" SocrataId="1cfa-rocks"/>
+  <Report Short="Report2" Name="c:\path\report2.xls" Macro="Report2.XLSB!MacroName1|Report1.XLSB!MacroName2" PostToSocrata="yes" SocrataAction="append" SocrataId="2cfa-rocks"/>
+  <Report Short="Report3" Name="c:\path\report3.xls" Macro="Report3.XLSB!MacroName1|Report1.XLSB!MacroName2" PostToSocrata="yes" SocrataAction="replace" SocrataId="3cfa-rocks"/>
+</Reports>

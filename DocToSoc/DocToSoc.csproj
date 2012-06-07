@@ -54,7 +54,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Socrata">
-      <HintPath>..\..\SODA\socrata-socrata-api-csharp-ecfd559\Socrata\bin\Release\Socrata.dll</HintPath>
+      <HintPath>..\..\..\..\DLLs\Socrata.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

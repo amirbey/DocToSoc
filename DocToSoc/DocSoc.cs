@@ -8,6 +8,7 @@ using System.Collections;
 using System.Xml.XPath;
 using System.Xml;
 using System.Configuration;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DocToSoc
 {
@@ -17,21 +18,48 @@ namespace DocToSoc
         public DocSoc()
         {
             string reportsFile = System.Configuration.ConfigurationManager.AppSettings["ReportsFile"];
-            Hashtable reportsHash = readReportsXML(reportsFile);
+            string macrosFile = System.Configuration.ConfigurationManager.AppSettings["MacrosFile"];
+            System.IO.FileInfo macrosFileInfo = new System.IO.FileInfo(macrosFile);
+            Hashtable reportsHash = readReportsXML(reportsFile,macrosFileInfo.Name);
             string[] reportsSelected = getSelectedReports(reportsHash);
-        
-            this.processReports(reportsHash,reportsSelected);
+
+            Excel.Application xlApp;
+            Excel.Workbook macroBook = null;
+            
+            xlApp = new Excel.Application();
+            Console.Write("Excel opened");
+           
+            try
+            {
+                macroBook = xlApp.Workbooks.Open(macrosFileInfo.FullName);
+                Console.WriteLine("MacroFile opened: " + macrosFileInfo.FullName);
+            
+                this.processReports(xlApp, reportsHash, reportsSelected);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                System.Windows.Forms.MessageBox.Show("DocToSoc failed while processing reports.", "DocToSoc Failed", System.Windows.Forms.MessageBoxButtons.OK);
+            }
+            finally
+            {
+                macroBook.Close();
+                Console.WriteLine("MacroWorkBook closed: " + macrosFile);
+                xlApp.Quit();
+                Console.WriteLine("Excel Closed");
+            }
         }
 
-        public void processReports(Hashtable reportsHash, string[] selectedReports)
+        public void processReports(Excel.Application xlApp, Hashtable reportsHash, string[] selectedReports)
         {
             foreach (string report in selectedReports)
             {
                 Report rpt = (Report)reportsHash[report];
                 if(rpt.MacroString.Length > 0)
-                    rpt.RunMacros();
+                    rpt.RunMacros(xlApp);
                 
-                rpt.UploadToSocrata();
+                if(rpt.Success)
+                    rpt.UploadToSocrata();
 
             }
         }
@@ -50,7 +78,7 @@ namespace DocToSoc
             return selectedReports;
         }
 
-        public Hashtable readReportsXML(string file)
+        public Hashtable readReportsXML(string file, string macroName)
         {
             
             XPathNavigator nav;
@@ -80,7 +108,7 @@ namespace DocToSoc
                 headerRowsString = nav2.GetAttribute("SocrataHeaderRows", "").Trim();
                 if(headerRowsString.Length > 0)
                     headerRows = int.Parse(headerRowsString);
-                reportsHash.Add(shortName,new Report(shortName, name, macro, postToSocrata, socrataAction,socrataId,headerRows));
+                reportsHash.Add(shortName,new Report(shortName, name, macroName,macro, postToSocrata, socrataAction,socrataId,headerRows));
 
                 Console.WriteLine("Report Added: {" + i + "} => " + shortName);
             }
